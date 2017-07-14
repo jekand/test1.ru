@@ -1,0 +1,198 @@
+<!DOCTYPE html PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML>
+<HEAD>
+    <TITLE>CALC</TITLE>
+    <meta charset="utf-8">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-theme.css" rel="stylesheet">
+    <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <link href="css/jquery.dataTables.css" rel="stylesheet">
+    <script type="text/javascript" charset="utf8" src="js/jquery.dataTables.js"></script>
+</HEAD>
+
+<style>
+.digit{
+  text-align: center;
+}
+<!--div.hide {
+
+        width: 100px;	height: 100px;
+        background: #fc0;
+        outline: 2px solid #000;
+        border: 3px solid #fff;
+        border-radius: 10px;
+    }-->
+</style>
+
+<BODY>
+<script> function SumAll() {
+    var a = parseInt(document.getElementById('a').value);
+    var b = parseInt(document.getElementById('b').value);
+    var z=(document.getElementById('operations').value);
+    var rez;
+
+    if (Number.isNaN(a)) alert("input a number");
+    if (Number.isNaN(b)) alert("input a number");
+
+    switch (z) {
+        case "+":
+            rez = a+b;
+            break;
+        case "-":
+            rez = a-b;
+            break;
+        case "*":
+            rez = a*b;
+            break;
+        case "/":
+            rez = a/b;
+            break;
+    }
+    console.log(rez);
+    if (isFinite(rez)==false) alert("input a number");
+
+   document.getElementById("div1").innerHTML = rez;
+}
+
+function request() {
+    $(".progress").css("visibility", "visible")
+    $("#progbar").html("1").css("width","1%")
+    var ftime = 1;
+    setInterval(function() {
+            if (ftime < 5) {
+                $("#progbar").html(ftime*20).css("width",(ftime*20)+"%")
+                ftime++
+            }
+        } ,1000)
+
+
+
+    $.get("http://test1.ru/test.php", {
+        a: parseInt(document.getElementById('a').value),
+        b: parseInt(document.getElementById('b').value),
+        z: (document.getElementById('operations').value),
+        }
+
+//--------------------------------------------------------------------
+
+    $(function() {
+        $("#myForm").submit(function() {
+            var formData = {
+                "a":$("#a").val()
+                , "b":$("#b").val()
+                ,"z":$("#z").val()
+            };
+            $.ajax({
+                url:'test.php'
+                , type:'POST'
+                , data:'jsonData=' + $.toJSON(formData)
+                , success: function(res) {
+                    alert(res);
+                }
+            });
+            return false;
+        });
+    });
+
+//--------------------------------------------------------------------
+
+    , function1(ooo){
+            document.getElementById("div1").innerHTML = ooo;
+            $("#progbar").show()
+            $("#progbar").html("0").css("width","100%")
+            $("#progbar").html("100")
+    });
+}
+
+
+
+//отсчет
+var c=0;
+var t;
+var timer_is_on=0;
+
+function stopCount()
+{
+    clearTimeout(t);
+    timer_is_on=0;
+}
+
+function timedCount()
+{
+    document.getElementById('txt').value=c;
+    c=c+1;
+    if (c=10) stopCount();
+    t=setTimeout("timedCount()",1000);
+}
+
+$('#clickme').click(function(){
+    $('#div1').show('slow', function() {
+        $('#div1').html;
+    });
+});
+
+</script>
+
+<script>
+    $(document).ready( function () {
+    $('#table_id').DataTable();
+} );
+</script>
+
+
+
+
+
+<H1>Calc INDEX.HTML</H1>
+    <div class="container well digit" style="width:100%">
+        <form >
+        <p><input name="a" id="a" value="0"></p>
+        <p><select name = "z" id="operations" multiple="multiple">
+            <option value = "+">+
+            <option value = "-">-
+            <option value = "*">*
+            <option value = "/">/
+        </select></p>
+            <p><input  name="b" id="b"  value="0"></p>
+        <p><input  type="button" class="btn btn-primary" onclick="request()" value="rezz"/></p>
+        </form>
+        <div class="progress" style="visibility: hidden">
+            <div id="progbar" class="progress-bar" role="progressbar" aria-valuenow="100"aria-valuemin="0" aria-valuemax="100" style="width:0%">100%</div>
+        </div>
+            <div class="well digit control-group warning" id="div1"></div></HTML>
+        <table class="display" id="history" width="100%" style="text-align: center;">
+            <thead>
+            <th title="id">id</th>
+            <th title="date">date</th>
+            <th title="result">history</th>
+            </thead>
+            <tbody>
+            <tr>
+                <td colspan="6" class="dataTables_empty">loading data</td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <th title="id">id</th>
+            <th title="date">date</th>
+            <th title="history">history</th>
+            </tfoot>
+        </table>
+
+        <script>
+
+            $(document).ready(function() {
+                $('#history').dataTable( {
+                    "aProcessing": true,
+                    "aServerSide": true,
+                    "ajax": "server-response.php",
+                } );
+            } );
+
+        </script>
+    </div>
+</BODY>
